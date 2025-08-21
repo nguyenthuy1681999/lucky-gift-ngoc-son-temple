@@ -34,17 +34,24 @@ header{text-align:center; padding:28px 16px 8px;}
 .title{font-size: clamp(20px,4vw,42px); font-weight:300; margin:0 0 6px;}
 .subtitle{margin:0; opacity:.9; font-size:clamp(12px,2.4vw,16px);}
 .stage{display:grid; place-items:center; min-height:calc(100% - 120px); padding:24px 16px 56px;}
+.stage {
+  display: flex;
+  justify-content: center; /* căn giữa ngang */
+  align-items: center;     /* căn giữa dọc */
+  min-height: calc(100vh - 120px); /* trừ header/footer nếu cần */
+  padding: 16px;
+}
+
+/* Grid 3 cột × 2 hàng */
 .gift-wrap {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* luôn 3 cột */
-  gap: 12px;                               /* khoảng giữa cột */
+  grid-template-columns: repeat(3, 1fr);
+  row-gap: 20px;       /* khoảng cách giữa hàng */
+  column-gap: 12px;    /* khoảng cách giữa cột */
   justify-items: center;
-  width: calc(100% - 20px);                /* chừa 10px padding 2 bên */
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 0 10px;
+  width: 100%;
+  max-width: 480px;    /* vừa màn điện thoại */
   box-sizing: border-box;
-  /* overflow-x:hidden;  nếu vẫn có tràn ngang, mở comment */
 }
 .gift.opened {
   position: fixed;
