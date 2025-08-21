@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Mở Quà May Mắn – Đền Ngọc Sơn</title>
+<style>
+:root{
+  --bg-start:#0b132b;
+  --bg-end:#1c2541;
+  --accent:#f6c445;
+  --accent-2:#d7263d;
+  --paper:#fff7e6;
+  --ink:#2d2a26;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  color:#fff;
+  background: radial-gradient(1200px 600px at 50% 10%, #23314f 0%, transparent 60%),
+              linear-gradient(150deg,var(--bg-start),var(--bg-end));
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed; inset:0;
+  background:url('https://badenmountain.sunworld.vn/wp-content/uploads/2025/04/5-De%CC%82%CC%80n-Ngo%CC%A3c-So%CC%9Bn-.jpg') center/cover no-repeat;
+  filter:brightness(0.35) saturate(1.1);
+  z-index:-2;
+}
+header{text-align:center; padding:28px 16px 8px;}
+.title{font-size: clamp(20px,4vw,42px); font-weight:300; margin:0 0 6px;}
+.subtitle{margin:0; opacity:.9; font-size:clamp(12px,2.4vw,16px);}
+.stage{display:grid; place-items:center; min-height:calc(100% - 120px); padding:24px 16px 56px;}
+.gift-wrap {
+  display:grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap:22px;
+  justify-items:center;
+  max-width:900px;
+  width:100%;
+  transition: all 0.5s ease;
+}
+.gift.opened {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.4);
+  z-index: 50; /* thấp hơn nút chơi lại */
+  transition: transform 0.5s cubic-bezier(.2,.8,.2,1);
+}
+.gift:not(.opened) {
+  transition: all 0.5s ease;
+}
+#btnReset {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 150; /* cao hơn hộp mở */
+}
+.gift{
+  width:160px;
+  aspect-ratio:1/1;
+  position:relative;
+  cursor:pointer;
+}
+/* Hộp quà */
+.gift .box{
+  position:absolute;
+  inset:18% 10% 8% 10%;
+  background:url('https://upload.wikimedia.org/wikipedia/commons/2/21/Flag_of_Vietnam.svg') center/cover no-repeat;
+  border-radius:16px; 
+  box-shadow:0 12px 28px rgba(0,0,0,.35);
+}
+/* Nắp hộp */
+.gift .lid{
+  position:absolute;
+  inset:6% 6% auto 6%;
+  height:26%;
+  background:linear-gradient(90deg, var(--accent-2) 0 48%, #ffd166 48% 52%, var(--accent-2) 52% 100%);
+  border-radius:14px;
+  box-shadow:0 10px 22px rgba(0,0,0,.35);
+  transform-origin:50% 100%;
+  transition: transform .5s cubic-bezier(.2,.8,.2,1);
+}
+/* Chữ trên hộp */
+.gift-label {
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, #ffcc00, #ff9900);
+  color: #fff;
+  font-weight: 900;
+  font-size: 16px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+
+  /* Hiệu ứng nổi bật */
+  text-shadow: 0 0 6px #fff, 0 0 12px #ff9900, 0 0 20px #ff6600;
+  box-shadow: 0 0 8px rgba(255, 165, 0, 0.8);
+  letter-spacing: 1px;
+}
+
+
+.gift:hover .lid{ transform: translateY(-2px) rotate(-1deg);}
+.coupon{
+  position:absolute; 
+  inset:auto 8% 100% 8%; 
+  height:0; 
+  overflow:hidden;
+  transition:all .55s cubic-bezier(.2,.85,.2,1);
+}
+.coupon-card{
+  width:100%; 
+  aspect-ratio:16/9; 
+  background:var(--paper); 
+  color:var(--ink);
+  border-radius:18px; 
+  padding:12px; 
+  text-align:center;
+}
+.coupon-title{font-weight:800; font-size:16px; margin:0 0 4px}
+.coupon-line{font-size:8px; margin:0}
+.seal{
+  position:absolute;
+  right:1px;
+  bottom:1px;
+  width:30px;
+  aspect-ratio:1/1;
+  border-radius:999px;
+  background: radial-gradient(circle at 30% 30%, #ffd166, var(--accent-2));
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+  display:grid;
+  place-items:center;
+  text-align:center;
+  transform: rotate(-12deg);
+  box-shadow: 0 4px 10px rgba(0,0,0,.3);
+}
+.opened .lid{ transform: translate(-10%, -120%) rotate(-15deg);}
+.opened .coupon{inset:auto 8% 52% 8%; height:auto;}
+.btn{ margin-top:18px; padding:10px 16px; border-radius:10px; border:none; cursor:pointer; font-weight:700; }
+.btn-primary{ background:linear-gradient(90deg,#ffb703,#fb8500); color:#1a1a1a; }
+.confetti{position:fixed; left:0; top:0; width:100%; height:100%; pointer-events:none;}
+.confetti i{position:absolute; width:10px; height:16px; opacity:.9; animation: fall 1600ms linear forwards;}
+@keyframes fall{to{ transform: translateY(110vh) rotate(720deg); }}
+footer{text-align:center; padding:18px; opacity:.8; font-size:12px}
+.hero-text {
+  font-size: 35px; 
+  font-weight: 900;
+  text-transform: uppercase;
+  text-align: center;
+  letter-spacing: 4px;
+
+  /* nền gradient đỏ - cam - vàng như lửa */
+  background: linear-gradient(45deg, #ff0000, #ff7300, #ffdd00, #ff7300, #ff0000);
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* viền sáng */
+  -webkit-text-stroke: 1px #ffeb99;
+
+  /* nhiều lớp bóng tạo hiệu ứng cháy */
+  text-shadow: 
+    0 0 5px #ff4d00,
+    0 0 10px #ff7300,
+    0 0 20px #ffdd00,
+    0 0 40px #ff7300,
+    0 0 80px #ff0000;
+  
+  animation: fireGlow 3s infinite linear;
+}
+
+@keyframes fireGlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+
+</style>
+</head>
+<body>
+<header>
+<h1 class="title">Quà May Mắn 🇻🇳 Đền Ngọc Sơn</h1>
+<p class="subtitle">Chạm nhẹ vào hộp, nhận quà bất ngờ ✨</p>
+<h1 class="hero-text">CHÀO MỪNG QUỐC KHÁNH VIỆT NAM </h1>
+
+</header>
+
+<main class="stage">
+<section class="gift-wrap" id="giftWrap">
+  <div class="gift">
+    <div class="lid"></div>
+    <div class="box"></div>
+    <div class="gift-label">Độc lập</div>
+    <div class="coupon">
+      <article class="coupon-card">
+        <h3 class="coupon-title">🎁</h3>
+        <p class="coupon-line">?</p>
+        <div class="seal">Lộc</div>
+      </article>
+    </div>
+  </div>
+  <div class="gift">
+    <div class="lid"></div>
+    <div class="box"></div>
+    <div class="gift-label">Tự do</div>
+    <div class="coupon">
+      <article class="coupon-card">
+        <h3 class="coupon-title">🎁</h3>
+        <p class="coupon-line">?</p>
+        <div class="seal">Lộc</div>
+      </article>
+    </div>
+  </div>
+  <div class="gift">
+    <div class="lid"></div>
+    <div class="box"></div>
+    <div class="gift-label">Hạnh phúc</div>
+    <div class="coupon">
+      <article class="coupon-card">
+        <h3 class="coupon-title">🎁</h3>
+        <p class="coupon-line">?</p>
+        <div class="seal">Lộc</div>
+      </article>
+    </div>
+  </div>
+  <div class="gift">
+    <div class="lid"></div>
+    <div class="box"></div>
+    <div class="gift-label">02/09/1945</div>
+    <div class="coupon">
+      <article class="coupon-card">
+        <h3 class="coupon-title">🎁</h3>
+        <p class="coupon-line">?</p>
+        <div class="seal">Lộc</div>
+      </article>
+    </div>
+  </div>
+  <div class="gift">
+    <div class="lid"></div>
+    <div class="box"></div>
+    <div class="gift-label">🕊️</div>
+    <div class="coupon">
+      <article class="coupon-card">
+        <h3 class="coupon-title">🎁</h3>
+        <p class="coupon-line">?</p>
+        <div class="seal">Lộc</div>
+      </article>
+    </div>
+  </div>
+  <div class="gift">
+    <div class="lid"></div>
+    <div class="box"></div>
+    <div class="gift-label">02/09/2025</div>
+    <div class="coupon">
+      <article class="coupon-card">
+        <h3 class="coupon-title">🎁</h3>
+        <p class="coupon-line">?</p>
+        <div class="seal">Lộc</div>
+      </article>
+    </div>
+  </div>
+</section>
+<button class="btn btn-primary" id="btnReset" hidden>Chơi lại</button>
+</main>
+
+<div class="confetti" id="confetti"></div>
+
+<footer>© 2025 – Mini game Đền Ngọc Sơn</footer>
+
+<script>
+const PRIZES = [
+  { title: '🎫 Giảm 10% sản phẩm', line: 'Áp dụng trong ngày' },
+  { title: '🛍️ -15% đồ lưu niệm', line: 'Mua tại cửa hàng' },
+  { title: '🎁 01 chuồn chuồn tre', line: 'Áp dụng trong ngày' },
+  { title: '🎊 -20% mua tò he', line: 'Áp dụng trong ngày' },
+  { title: '🎟️ Mua một tặng một', line: 'Mua sản phẩm bất kỳ' },
+  { title: '💮 Giảm 50% sản phẩm', line: 'Check-in di tích' }
+];
+
+const gifts = document.querySelectorAll('.gift');
+const btnReset = document.getElementById('btnReset');
+const confettiRoot = document.getElementById('confetti');
+let gameEnded = false;
+
+gifts.forEach(gift => {
+  gift.addEventListener('click', () => {
+    if (gameEnded) return;
+    gameEnded = true;
+
+    const p = PRIZES[Math.floor(Math.random() * PRIZES.length)];
+    gift.querySelector('.coupon-title').textContent = p.title;
+    gift.querySelector('.coupon-line').textContent = p.line;
+
+    gift.classList.add('opened');
+    gifts.forEach(g => { if(g!==gift) g.style.display='none'; });
+
+    confetti();
+    btnReset.hidden = false;
+  });
+});
+
+btnReset.addEventListener('click', () => {
+  gameEnded = false;
+  gifts.forEach(g => {
+    g.classList.remove('opened');
+    g.style.display='block';
+    g.querySelector('.coupon-title').textContent = '🎁';
+    g.querySelector('.coupon-line').textContent = '?';
+  });
+  btnReset.hidden = true;
+});
+
+function confetti(){
+  const colors = ['#ffd166','#ef476f','#06d6a0','#118ab2','#f6c445','#d7263d'];
+  const COUNT = 100;
+  for(let i=0;i<COUNT;i++){
+    const piece = document.createElement('i');
+    const size = 6 + Math.random()*8;
+    piece.style.width = size + 'px';
+    piece.style.height = (size*1.6) + 'px';
+    piece.style.left = (Math.random()*100) + 'vw';
+    piece.style.top = (-10 - Math.random()*20) + 'vh';
+    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+    piece.style.transform = `translateY(0) rotate(${Math.random()*360}deg)`;
+    piece.style.animationDuration = (1100 + Math.random()*900) + 'ms';
+    confettiRoot.appendChild(piece);
+    setTimeout(()=> piece.remove(), 1800);
+  }
+}
+</script>
+</body>
+</html>
