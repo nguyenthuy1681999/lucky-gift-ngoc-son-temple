@@ -50,9 +50,20 @@ header{text-align:center; padding:28px 16px 8px;}
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(1.4);
-  z-index: 50; /* thấp hơn nút chơi lại */
-  transition: transform 0.5s cubic-bezier(.2,.8,.2,1);
+  transform: translate(-50%, -50%);
+  width: clamp(140px, 40vw, 200px); /* nhỏ vừa, max 200px trên desktop */
+  aspect-ratio: 1/1;                /* vẫn vuông */
+  z-index: 50;
+  transition: all 0.5s cubic-bezier(.2,.8,.2,1);
+}
+
+.gift.opened .lid { 
+  transform: translate(-10%, -120%) rotate(-15deg);
+}
+
+.gift.opened .coupon { 
+  inset: auto 8% 52% 8%; 
+  height: auto;
 }
 .gift:not(.opened) {
   transition: all 0.5s ease;
@@ -131,8 +142,8 @@ header{text-align:center; padding:28px 16px 8px;}
   padding:12px; 
   text-align:center;
 }
-.coupon-title{font-weight:800; font-size:16px; margin:0 0 4px}
-.coupon-line{font-size:8px; margin:0}
+.coupon-title{font-weight:800; font-size:18px; margin:0 0 4px}
+.coupon-line{font-size:12px; margin:0}
 .seal{
   position:absolute;
   right:1px;
